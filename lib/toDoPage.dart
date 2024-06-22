@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:todots/completedTask.dart';
 import 'package:todots/configUrl.dart';
 import 'package:todots/toDoClass.dart';
 
@@ -101,7 +102,10 @@ class TodoListScreenState extends State<TodoListScreen> {
     if (serverResponse.statusCode == 200) {
       List<dynamic> responseJson = jsonDecode(serverResponse.body);
       setState(() {
-        todos = responseJson.map((json) => Todo.fromJson(json)).toList();
+        todos = responseJson
+            .map((json) => Todo.fromJson(json))
+            .where((todo) => !todo.completed)
+            .toList();
       });
     } else {
       if (kDebugMode) {
@@ -155,6 +159,13 @@ class TodoListScreenState extends State<TodoListScreen> {
                         Navigator.pop(context);
                       },
                       child: const Text('Update Todo'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _deleteTodo(todo);
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Delete Todo'),
                     )
                   ],
                 ),
@@ -222,6 +233,33 @@ class TodoListScreenState extends State<TodoListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Todo List'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              fetchTodos();
+            },
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CompletedTasks(),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.blue.shade100,
+              ),
+              padding: const EdgeInsets.all(10),
+              child: Text("Completed Tasks"),
+            ),
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: todos.length,
@@ -230,7 +268,12 @@ class TodoListScreenState extends State<TodoListScreen> {
           return ListTile(
             title: Text(todo.title),
             subtitle: Text(todo.description),
-            trailing: const Icon(Icons.arrow_forward),
+            trailing: IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                _showUpdateTodoModal(todo);
+              },
+            ),
             onTap: () {
               _showUpdateTodoModal(todo);
             },
