@@ -5,8 +5,8 @@ import Todo from '../models/Todo';
 
 
 interface User {
-  id: string; // Assuming id is of type string
-  // Add other properties if needed
+  id: string; 
+  
 }
 
 export const createTodo = async (req: Request, res: Response) => {

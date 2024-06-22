@@ -8,7 +8,7 @@ import User from '../models/User';
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10); // Hashing the password
+    const hashedPassword = await bcrypt.hash(password, 10); 
     const user = new User({ username, password: hashedPassword });
     await user.save();
     res.status(201).json({ message: 'User registered successfully' });

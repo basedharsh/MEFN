@@ -3,7 +3,7 @@ import { Schema, model, Document } from 'mongoose';
 export interface Todo extends Document {
   title: string;
   description: string;
-  user: string; // Assuming user ID reference
+  user: string; 
 }
 
 const TodoSchema = new Schema({
