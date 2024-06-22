@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:todots/configUrl.dart';
 import 'package:todots/toDoClass.dart';
 
 class TodoListScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class TodoListScreenState extends State<TodoListScreen> {
   }
 
   Future<void> _createTodo(String title, String description) async {
-    String url = 'http://localhost:3000/api/todos';
+    String url = '${Config.baseUrl}/todos';
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -94,7 +95,7 @@ class TodoListScreenState extends State<TodoListScreen> {
   }
 
   Future<void> fetchTodos() async {
-    String url = 'http://localhost:3000/api/todos';
+    String url = '${Config.baseUrl}/todos';
     final serverResponse = await http.get(Uri.parse(url));
 
     if (serverResponse.statusCode == 200) {
@@ -166,7 +167,7 @@ class TodoListScreenState extends State<TodoListScreen> {
   }
 
   Future<void> _deleteTodo(Todo todo) async {
-    String url = 'http://localhost:3000/api/todos/${todo.id}';
+    String url = '${Config.baseUrl}/todos/${todo.id}';
     try {
       final response = await http.delete(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -187,7 +188,7 @@ class TodoListScreenState extends State<TodoListScreen> {
   }
 
   Future<void> _updateTodo(Todo todo, String title, String description) async {
-    String url = 'http://localhost:3000/api/todos/${todo.id}';
+    String url = '${Config.baseUrl}/todos/${todo.id}';
     try {
       final response = await http.put(
         Uri.parse(url),
