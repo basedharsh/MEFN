@@ -211,6 +211,7 @@ class TodoListScreenState extends State<TodoListScreen> {
     } catch (e) {
       if (kDebugMode) {
         print('Error updating todo: $e');
+        // Handle the error here
       }
     }
   }
