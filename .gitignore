@@ -42,5 +42,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-/backendConfig/node_modules/
+/backend/node_modules/
 /lib/configUri.dart 
