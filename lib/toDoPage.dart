@@ -1,14 +1,19 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todots/toDoClass.dart';
 
 class TodoListScreen extends StatefulWidget {
+  const TodoListScreen({super.key});
+
   @override
-  _TodoListScreenState createState() => _TodoListScreenState();
+  TodoListScreenState createState() => TodoListScreenState();
 }
 
-class _TodoListScreenState extends State<TodoListScreen> {
+class TodoListScreenState extends State<TodoListScreen> {
   List<Todo> todos = [];
 
   @override
@@ -31,11 +36,17 @@ class _TodoListScreenState extends State<TodoListScreen> {
       if (response.statusCode == 201) {
         fetchTodos();
       } else {
-        print('Failed to create todo: ${response.statusCode}');
-        print('Response body: ${response.body}');
+        if (kDebugMode) {
+          print('Failed to create todo: ${response.statusCode}');
+        }
+        if (kDebugMode) {
+          print('Response body: ${response.body}');
+        }
       }
     } catch (e) {
-      print('Error creating todo: $e');
+      if (kDebugMode) {
+        print('Error creating todo: $e');
+      }
     }
   }
 
@@ -51,17 +62,17 @@ class _TodoListScreenState extends State<TodoListScreen> {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: titleController,
-                    decoration: InputDecoration(hintText: 'Title'),
+                    decoration: const InputDecoration(hintText: 'Title'),
                   ),
                   TextField(
                     controller: descriptionController,
-                    decoration: InputDecoration(hintText: 'Description'),
+                    decoration: const InputDecoration(hintText: 'Description'),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -71,7 +82,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
                         descriptionController.text,
                       );
                     },
-                    child: Text('Update Todo'),
+                    child: const Text('Update Todo'),
                   )
                 ],
               ),
@@ -92,7 +103,9 @@ class _TodoListScreenState extends State<TodoListScreen> {
         todos = responseJson.map((json) => Todo.fromJson(json)).toList();
       });
     } else {
-      print('Failed to fetch todos');
+      if (kDebugMode) {
+        print('Failed to fetch todos');
+      }
     }
   }
 
@@ -111,17 +124,18 @@ class _TodoListScreenState extends State<TodoListScreen> {
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: titleController,
-                      decoration: InputDecoration(hintText: 'Title'),
+                      decoration: const InputDecoration(hintText: 'Title'),
                     ),
                     TextField(
                       controller: descriptionController,
-                      decoration: InputDecoration(hintText: 'Description'),
+                      decoration:
+                          const InputDecoration(hintText: 'Description'),
                     ),
                     //CHECKBOX TO MARK AS COMPLETED
                     CheckboxListTile(
@@ -131,7 +145,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
                           todo.completed = value!;
                         });
                       },
-                      title: Text('Completed'),
+                      title: const Text('Completed'),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -139,7 +153,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
                             descriptionController.text);
                         Navigator.pop(context);
                       },
-                      child: Text('Update Todo'),
+                      child: const Text('Update Todo'),
                     )
                   ],
                 ),
@@ -158,11 +172,17 @@ class _TodoListScreenState extends State<TodoListScreen> {
       if (response.statusCode == 200) {
         fetchTodos();
       } else {
-        print('Failed to delete todo: ${response.statusCode}');
-        print('Response body: ${response.body}');
+        if (kDebugMode) {
+          print('Failed to delete todo: ${response.statusCode}');
+        }
+        if (kDebugMode) {
+          print('Response body: ${response.body}');
+        }
       }
     } catch (e) {
-      print('Error deleting todo: $e');
+      if (kDebugMode) {
+        print('Error deleting todo: $e');
+      }
     }
   }
 
@@ -181,11 +201,17 @@ class _TodoListScreenState extends State<TodoListScreen> {
       if (response.statusCode == 200) {
         fetchTodos();
       } else {
-        print('Failed to update todo: ${response.statusCode}');
-        print('Response body: ${response.body}');
+        if (kDebugMode) {
+          print('Failed to update todo: ${response.statusCode}');
+        }
+        if (kDebugMode) {
+          print('Response body: ${response.body}');
+        }
       }
     } catch (e) {
-      print('Error updating todo: $e');
+      if (kDebugMode) {
+        print('Error updating todo: $e');
+      }
     }
   }
 
@@ -193,7 +219,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo List'),
+        title: const Text('Todo List'),
       ),
       body: ListView.builder(
         itemCount: todos.length,
@@ -202,7 +228,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
           return ListTile(
             title: Text(todo.title),
             subtitle: Text(todo.description),
-            trailing: Icon(Icons.arrow_forward),
+            trailing: const Icon(Icons.arrow_forward),
             onTap: () {
               _showUpdateTodoModal(todo);
             },
@@ -223,8 +249,11 @@ class _TodoListScreenState extends State<TodoListScreen> {
             updatedAt: DateTime.now(),
           ));
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
+
+
+// TODO: Improve the UI
