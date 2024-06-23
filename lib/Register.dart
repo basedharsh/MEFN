@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, file_names, use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -41,7 +43,7 @@ class RegisterPageState extends State<RegisterPage> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
+          MaterialPageRoute(builder: (context) => const LoginPage()),
         );
       } else {
         if (kDebugMode) {

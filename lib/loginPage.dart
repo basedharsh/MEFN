@@ -1,7 +1,10 @@
+// ignore_for_file: file_names, use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todots/Register.dart';
 import 'package:todots/configUrl.dart';
 import 'package:todots/toDoPage.dart';
@@ -15,21 +18,56 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  final _UsernameController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _passwordVisible = false;
+  String? _errorMessage;
+  bool _isCheckingLoginStatus = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loginStatus();
+  }
 
   @override
   void dispose() {
-    _UsernameController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
+  Future<void> _loginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jwtToken = prefs.getString('jwtToken');
+    if (jwtToken != null) {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => TodoListScreen(jwtToken: jwtToken)));
+    } else {
+      setState(() {
+        _isCheckingLoginStatus = false;
+      });
+    }
+  }
+
   Future<void> _loginUsingJwtToken() async {
     String url = '${Config.baseUrl}/login';
-    String username = _UsernameController.text;
+    String username = _usernameController.text;
     String password = _passwordController.text;
+
+    if (username.isEmpty || password.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please fill in all fields';
+      });
+      return;
+    }
+
+    setState(() {
+      _errorMessage = null;
+    });
+
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -41,22 +79,25 @@ class LoginPageState extends State<LoginPage> {
       );
       if (response.statusCode == 200) {
         String jwtToken = jsonDecode(response.body)['token'];
-        Navigator.push(
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('jwtToken', jwtToken);
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => TodoListScreen(
-                    jwtToken: jwtToken,
-                  )),
+              builder: (context) => TodoListScreen(jwtToken: jwtToken)),
         );
       } else {
-        if (kDebugMode) {
-          print('Failed to login: ${response.statusCode}');
-        }
+        setState(() {
+          _errorMessage = 'Failed to login: ${response.statusCode}';
+        });
         if (kDebugMode) {
           print('Response body: ${response.body}');
         }
       }
     } catch (e) {
+      setState(() {
+        _errorMessage = 'Error: $e';
+      });
       if (kDebugMode) {
         print('Error: $e');
       }
@@ -65,6 +106,14 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isCheckingLoginStatus) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -85,7 +134,7 @@ class LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 24),
               TextField(
-                controller: _UsernameController,
+                controller: _usernameController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey[200],
@@ -126,6 +175,13 @@ class LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(height: 24),
+              if (_errorMessage != null) ...[
+                Text(
+                  _errorMessage!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+                const SizedBox(height: 24),
+              ],
               ElevatedButton(
                 onPressed: _loginUsingJwtToken,
                 style: ElevatedButton.styleFrom(

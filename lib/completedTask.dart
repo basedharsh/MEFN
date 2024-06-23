@@ -1,4 +1,6 @@
-import 'dart:convert';
+// ignore_for_file: file_names, non_constant_identifier_names
+
+import "dart:convert";
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +17,7 @@ class CompletedTasks extends StatefulWidget {
 }
 
 class _CompletedTasksState extends State<CompletedTasks> {
-  List<Todo> CompletedTodos = [];
+  List<Todo> CompletedTodos = <Todo>[];
 
   @override
   void initState() {
@@ -75,14 +77,23 @@ class _CompletedTasksState extends State<CompletedTasks> {
                           const InputDecoration(hintText: 'Description'),
                     ),
                     //CHECKBOX TO MARK AS COMPLETED
-                    CheckboxListTile(
-                      value: todo.completed,
+                    DropdownButton(
+                      value: todo.completed ? 'true' : 'false',
                       onChanged: (value) {
                         setState(() {
-                          todo.completed = value!;
+                          todo.completed = value == 'true';
                         });
                       },
-                      title: const Text('Completed'),
+                      items: const [
+                        DropdownMenuItem(
+                          value: 'true',
+                          child: Text('Completed'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'false',
+                          child: Text('Not Completed'),
+                        ),
+                      ],
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -114,7 +125,10 @@ class _CompletedTasksState extends State<CompletedTasks> {
     try {
       final response = await http.put(
         Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.jwtToken}'
+        },
         body: jsonEncode({
           'title': title,
           'description': description,
@@ -134,7 +148,6 @@ class _CompletedTasksState extends State<CompletedTasks> {
     } catch (e) {
       if (kDebugMode) {
         print('Error updating todo: $e');
-        // Handle the error here
       }
     }
   }
@@ -181,5 +194,11 @@ class _CompletedTasksState extends State<CompletedTasks> {
                 ),
               );
             }));
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<Todo>('CompletedTodos', CompletedTodos));
   }
 }
