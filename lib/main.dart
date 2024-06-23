@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todots/loginPage.dart';
 import 'package:todots/toDoPage.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const TodoListScreen(),
+      home: const LoginPage(),
     );
   }
 }

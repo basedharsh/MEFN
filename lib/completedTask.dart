@@ -7,7 +7,8 @@ import 'package:todots/toDoClass.dart';
 import 'package:http/http.dart' as http;
 
 class CompletedTasks extends StatefulWidget {
-  const CompletedTasks({super.key});
+  final String jwtToken;
+  const CompletedTasks({super.key, required this.jwtToken});
 
   @override
   State<CompletedTasks> createState() => _CompletedTasksState();
@@ -24,7 +25,10 @@ class _CompletedTasksState extends State<CompletedTasks> {
 
   Future<void> completedTodos() async {
     String url = '${Config.baseUrl}/todos?completed=true';
-    final serverResponse = await http.get(Uri.parse(url));
+    final serverResponse = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${widget.jwtToken}'
+    });
 
     if (serverResponse.statusCode == 200) {
       List<dynamic> responseJson = jsonDecode(serverResponse.body);

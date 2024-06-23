@@ -9,7 +9,8 @@ import 'package:todots/configUrl.dart';
 import 'package:todots/toDoClass.dart';
 
 class TodoListScreen extends StatefulWidget {
-  const TodoListScreen({super.key});
+  final String jwtToken;
+  const TodoListScreen({super.key, required this.jwtToken});
 
   @override
   TodoListScreenState createState() => TodoListScreenState();
@@ -29,7 +30,10 @@ class TodoListScreenState extends State<TodoListScreen> {
     try {
       final response = await http.post(
         Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.jwtToken}'
+        },
         body: jsonEncode({
           'title': title,
           'description': description,
@@ -97,19 +101,31 @@ class TodoListScreenState extends State<TodoListScreen> {
 
   Future<void> fetchTodos() async {
     String url = '${Config.baseUrl}/todos';
-    final serverResponse = await http.get(Uri.parse(url));
+
+    final serverResponse = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${widget.jwtToken}'
+      },
+    );
 
     if (serverResponse.statusCode == 200) {
       List<dynamic> responseJson = jsonDecode(serverResponse.body);
+
       setState(() {
         todos = responseJson
             .map((json) => Todo.fromJson(json))
-            .where((todo) => !todo.completed)
+            .where((todo) => todo.completed == false)
             .toList();
+        if (kDebugMode) {
+          print("TODOS: $todos");
+        }
       });
     } else {
       if (kDebugMode) {
-        print('Failed to fetch todos');
+        print('Failed to fetch todos: ${serverResponse.statusCode}');
+        print('Response body: ${serverResponse.body}');
       }
     }
   }
@@ -180,7 +196,13 @@ class TodoListScreenState extends State<TodoListScreen> {
   Future<void> _deleteTodo(Todo todo) async {
     String url = '${Config.baseUrl}/todos/${todo.id}';
     try {
-      final response = await http.delete(Uri.parse(url));
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.jwtToken}'
+        },
+      );
       if (response.statusCode == 200) {
         fetchTodos();
       } else {
@@ -203,13 +225,18 @@ class TodoListScreenState extends State<TodoListScreen> {
     try {
       final response = await http.put(
         Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.jwtToken}'
+        },
         body: jsonEncode({
           'title': title,
           'description': description,
           'completed': todo.completed,
         }),
       );
+      print(response.body);
+      print(response.statusCode);
       if (response.statusCode == 200) {
         fetchTodos();
       } else {
@@ -245,7 +272,8 @@ class TodoListScreenState extends State<TodoListScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CompletedTasks(),
+                  builder: (context) =>
+                      CompletedTasks(jwtToken: widget.jwtToken),
                 ),
               );
             },

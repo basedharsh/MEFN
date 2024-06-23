@@ -19,12 +19,17 @@ class Todo {
 
   factory Todo.fromJson(Map<String, dynamic> json) {
     return Todo(
-      id: json['_id'],
-      title: json['title'],
-      description: json['description'],
-      completed: json['completed'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      id: json['_id'] ?? '', // Handle null case for id
+      title: json['title'] ?? '', // Handle null case for title
+      description:
+          json['description'] ?? '', // Handle null case for description
+      completed: json['completed'] ?? false,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(), // Handle null case for createdAt
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : DateTime.now(), // Handle null case for updatedAt
     );
   }
 }

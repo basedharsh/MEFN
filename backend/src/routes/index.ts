@@ -3,12 +3,12 @@
 import { Router } from 'express';
 import { createTodo, getTodos, getTodoById, updateTodo, deleteTodo } from '../controllers/TodoController';
 import { registerUser, loginUser } from '../controllers/UserController';
-import { verifyToken } from '../middleware/auth'; // Import middleware to verify JWT token
+import { verifyToken } from '../middleware/auth'; 
 
 const router = Router();
 
-// Todo routes
-router.post('/todos', verifyToken, createTodo); // Protected route, requires JWT token
+
+router.post('/todos', verifyToken, createTodo); // Protected route
 router.get('/todos', verifyToken, getTodos);
 router.get('/todos/:id', verifyToken, getTodoById);
 router.put('/todos/:id', verifyToken, updateTodo);
