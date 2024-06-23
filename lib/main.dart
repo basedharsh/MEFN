@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todots/handleData/todoProvider.dart';
-import 'package:todots/loginPage.dart';
+import 'package:todots/handleData/todo_provider.dart';
+import 'package:todots/login_screen.dart';
 
 void main() {
   runApp(const MyApp());

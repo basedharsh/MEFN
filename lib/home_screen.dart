@@ -5,10 +5,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todots/completedTask.dart';
-import 'package:todots/handleData/todoProvider.dart';
-import 'package:todots/loginPage.dart';
-import 'package:todots/toDoClass.dart';
+import 'package:todots/completed_todo_screen.dart';
+import 'package:todots/handleData/todo_provider.dart';
+import 'package:todots/login_screen.dart';
+import 'package:todots/todo_model.dart';
 
 class TodoListScreen extends StatelessWidget {
   final String jwtToken;

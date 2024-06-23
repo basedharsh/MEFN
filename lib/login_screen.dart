@@ -5,9 +5,9 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todots/Register.dart';
-import 'package:todots/configUrl.dart';
-import 'package:todots/toDoPage.dart';
+import 'package:todots/register_screen.dart';
+import 'package:todots/config_url.dart';
+import 'package:todots/home_screen.dart';
 import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {

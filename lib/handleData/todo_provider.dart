@@ -1,8 +1,8 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/foundation.dart';
-import 'package:todots/handleData/fetchTodo.dart';
-import 'package:todots/toDoClass.dart';
+import 'package:todots/handleData/api_todo.dart';
+import 'package:todots/todo_model.dart';
 
 class TodoProvider extends ChangeNotifier {
   List<Todo> _todos = [];

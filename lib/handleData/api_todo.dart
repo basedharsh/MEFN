@@ -3,8 +3,8 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:todots/configUrl.dart';
-import 'package:todots/toDoClass.dart';
+import 'package:todots/config_url.dart';
+import 'package:todots/todo_model.dart';
 
 class TodoService {
   static Future<List<Todo>> fetchTodos(String jwtToken) async {
