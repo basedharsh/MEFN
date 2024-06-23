@@ -29,7 +29,7 @@ This repository contains a full-stack project template using MongoDB, Express.js
 
 4. **Configure MongoDB connection:**
 
-   Inside your backend code (typically in `backend/server.ts`), ensure you have your MongoDB connection configured. Example:
+   Inside your backend code (in `backend/src/server.ts`), ensure you have your MongoDB connection configured. Example:
    
    ```javascript
    const mongoose = require('mongoose');
