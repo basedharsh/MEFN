@@ -1,7 +1,7 @@
 
 # MEFN (MongoDB, Express.js, Flutter, Node.js) Project
 
-This repository contains a full-stack project template using MongoDB, Express.js for the backend, and Flutter for the frontend.
+This repository contains a basic crud todo app made using MongoDB, Express.js for the backend, and Flutter for the frontend.
 
 ## Backend Setup
 
